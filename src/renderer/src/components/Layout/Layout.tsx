@@ -1,15 +1,10 @@
-import { ReactNode } from 'react'
-import styles from './Layout.module.css'
 import { cn } from '@/utils/cn'
 import { Button } from '../Button/Button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Tabs/Tabs'
 import { GeneratorPage } from '../GeneratorPage/GeneratorPage'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Tabs/Tabs'
+import styles from './Layout.module.css'
 
-interface LayoutProps {
-  children: ReactNode
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }: LayoutProps) => {
+const Layout: React.FC = () => {
   return (
     <>
       <div className={cn(styles.dragArea, 'w-full min-h-8')}></div>
