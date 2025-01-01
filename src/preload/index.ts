@@ -14,8 +14,16 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('api', api)
 
     contextBridge.exposeInMainWorld('supabaseAPI', {
+      fetchTexts: async () => {
+        const response = await fetch(
+          'https://utmimfwfldlhkagfncwx.supabase.co/functions/v1/manage-texts'
+        )
+        const data = await response.json()
+        return data
+      },
+
       fetchPosts: async () => {
-        const { data, error } = await supabase.from('posts').select('*')
+        const { data, error } = await supabase.from('posts').select('content')
         if (error) throw error
         return data
       }
@@ -28,4 +36,5 @@ if (process.contextIsolated) {
   window.electron = electronAPI
   // @ts-ignore (define in dts)
   window.api = api
+  // @ts-ignore (define in dts)
 }

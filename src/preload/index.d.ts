@@ -6,6 +6,7 @@ declare global {
     api: unknown
     supabaseAPI: {
       fetchPosts: () => Promise<IPost[]>
+      fetchTexts: () => Promise<IPost[]>
     }
   }
 }

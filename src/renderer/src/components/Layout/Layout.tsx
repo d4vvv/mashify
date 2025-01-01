@@ -1,10 +1,29 @@
 import { cn } from '@/utils/cn'
+import { useCallback, useEffect, useState } from 'react'
 import { Button } from '../Button/Button'
 import { GeneratorPage } from '../GeneratorPage/GeneratorPage'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Tabs/Tabs'
 import styles from './Layout.module.css'
+import { IPost } from '@/types/post'
 
 const Layout: React.FC = () => {
+  const [posts, setPosts] = useState<IPost[]>([])
+
+  const testFunc = useCallback(async () => {
+    const data = await window.supabaseAPI.fetchPosts()
+    setPosts(data)
+  }, [])
+
+  useEffect(() => {
+    testFunc()
+  }, [testFunc])
+
+  useEffect(() => {
+    // const test = fetchOpenAIResponse(
+    // 'Potrzebuję napisać wpis promujący nasze nowe trzewiki wykonane ze skóry naturalnej. Mogę prosić o pomoc?'
+    // )
+  }, [posts])
+
   return (
     <>
       <div className={cn(styles.dragArea, 'w-full min-h-8')}></div>
@@ -23,7 +42,7 @@ const Layout: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="generator">
-            <GeneratorPage />
+            <GeneratorPage posts={posts} />
           </TabsContent>
           <TabsContent value="entries">Entries</TabsContent>
         </Tabs>
