@@ -2,14 +2,21 @@ import { useCallback, useState } from 'react'
 import { GeneratorBubble } from '../Bubbles/GeneratorBubble'
 import { UserBubble } from '../Bubbles/UserBubble'
 import { GeneratorInput } from '../GeneratorInput/GeneratorInput'
-import { IPost } from '@/types/post'
+import { useConversation } from '@/hooks/useConversation'
 
 interface GeneratorPageProps {
-  posts: IPost[]
+  posts: string[]
 }
 
 export const GeneratorPage: React.FC<GeneratorPageProps> = ({ posts }) => {
-  const [isLoading, setIsLoading] = useState(false)
+  const { conversation, addUserMessage, addAssistantMessage, updateAssistantMessage } =
+    useConversation()
+
+  const handleNewMessage = (message: string) => {
+    addUserMessage(message)
+    addAssistantMessage()
+    fetchOpenAIResponse(message)
+  }
 
   const fetchOpenAIResponse = useCallback(async (prompt) => {
     try {
@@ -17,34 +24,32 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ posts }) => {
         relevantPosts: posts.join('|'),
         prompt
       })
-      console.log(response)
+
+      updateAssistantMessage(response)
     } catch (error) {
       console.error('Error fetching OpenAI response:', error)
     }
   }, [])
 
+  const renderConversation = () =>
+    conversation.map((message, index) => {
+      return (
+        <>
+          {message.isUser ? (
+            <UserBubble key={index} text={message.text as string} />
+          ) : (
+            <GeneratorBubble key={index} text={message.text} isLoading={message.isLoading} />
+          )}
+        </>
+      )
+    })
+
   return (
     <div className="flex-col flex h-full gap-4 w-full pr-4">
       <div className="flex-1 flex flex-col w-full overflow-y-auto no-scrollbar gap-4">
-        <GeneratorBubble text="Cześć! Jak mogę ci pomóc?" />
-        <UserBubble />
-        <GeneratorBubble />
-        <UserBubble />
-        <GeneratorBubble />
-        <UserBubble />
-        <GeneratorBubble />
-        <UserBubble />
-        <GeneratorBubble />
-        <UserBubble />
-        <GeneratorBubble />
-        <UserBubble />
-        <GeneratorBubble isLoading />
-        <UserBubble />
-        <GeneratorBubble isLoading={isLoading} />
-        {isLoading && <UserBubble />}
+        {renderConversation()}
       </div>
-      <button onClick={() => setIsLoading((state) => !state)}>test</button>
-      <GeneratorInput />
+      <GeneratorInput addUserMessage={handleNewMessage} />
     </div>
   )
 }
