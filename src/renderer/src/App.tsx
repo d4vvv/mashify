@@ -7,14 +7,13 @@ const App: React.FC = () => {
 
   const testFunc = useCallback(async () => {
     const data = await window.supabaseAPI.fetchPosts()
+    const test = await window.supabaseAPI.fetchTexts()
     setPosts(data)
   }, [])
 
   useEffect(() => {
     testFunc()
   }, [testFunc])
-
-  console.log({ posts })
 
   return (
     <div className="p-2">

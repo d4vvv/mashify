@@ -7,7 +7,8 @@
     "src/preload/*.d.ts",
     "src/utils/*.ts",
     "src/types/*.ts", 
-    "src/preload/supabase"  ],
+    "src/preload/supabase",
+    "src/hooks/*.ts"  ],
   "compilerOptions": {
     "types": ["vite/client"],
     "composite": true,

@@ -6,8 +6,6 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 // @ts-ignore (define in dts)
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
 
-console.log({ supabaseUrl, supabaseKey })
-
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 export default supabase

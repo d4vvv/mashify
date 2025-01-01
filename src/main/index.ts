@@ -1,7 +1,51 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { electronApp, is, optimizer } from '@electron-toolkit/utils'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import OpenAI from 'openai'
+
+const configuration = {
+  apiKey:
+    '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',
+  organization: 'org-f7Q7ypJpglT8flHx55RJA605'
+}
+
+const openai = new OpenAI(configuration)
+
+ipcMain.handle('assistantQuestion', async (_, { relevantPosts, prompt }) => {
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'system',
+        content: [
+          {
+            type: 'text',
+            text: `Jesteś asystentem, który pomaga tworzyć wpisy na platformie instagram. Konto przeznaczone jest marce obówniczej MIUMMASH. Powinieneś tworzyć gotowe do opublikowania wpisy podobne w stylu do tych, które już istnieją na platformie. Poprzednie wpisy zostaną podane poniżej. Poszczególne poprzednie wpisy będą oddzielone znakiem |. Możesz zadać pytanie, aby dowiedzieć się więcej na temat wpisu, który chcesz stworzyć. Wpisy: ${relevantPosts}`
+          }
+        ]
+      },
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'text',
+            text: prompt
+          }
+        ]
+      }
+    ]
+  })
+
+  try {
+    const answer = completion.choices[0].message.content || ''
+
+    return answer
+  } catch (error) {
+    console.error('Error fetching OpenAI response:', error)
+    return 'error'
+  }
+})
 
 function createWindow(): void {
   // Create the browser window.
