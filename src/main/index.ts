@@ -13,6 +13,7 @@ const configuration = {
 const openai = new OpenAI(configuration)
 
 ipcMain.handle('assistantQuestion', async (_, { relevantPosts, prompt }) => {
+  console.log({ relevantPosts })
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [
@@ -21,7 +22,7 @@ ipcMain.handle('assistantQuestion', async (_, { relevantPosts, prompt }) => {
         content: [
           {
             type: 'text',
-            text: `Jesteś asystentem, który pomaga tworzyć wpisy na platformie instagram. Konto przeznaczone jest marce obówniczej MIUMMASH. Powinieneś tworzyć gotowe do opublikowania wpisy podobne w stylu do tych, które już istnieją na platformie. Poprzednie wpisy zostaną podane poniżej. Poszczególne poprzednie wpisy będą oddzielone znakiem |. Możesz zadać pytanie, aby dowiedzieć się więcej na temat wpisu, który chcesz stworzyć. Wpisy: ${relevantPosts}`
+            text: `Jesteś asystentem, który pomaga tworzyć wpisy na platformie instagram. Konto przeznaczone jest marce obówniczej. Powinieneś tworzyć gotowe do opublikowania wpisy bardzo mocno inspirowane w stylu tymi, które już istnieją i zostały podane poniżej. Nie używaj emoji. Pamiętaj o odpowiednim formatowaniu wpisu i całej swojej odpowiedzi. Unikaj przechwalającego się tonu. Poszczególne poprzednie wpisy będą oddzielone znakiem |. Możesz zadać pytanie, aby dowiedzieć się więcej na temat wpisu, który chcesz stworzyć. Nie wolno ci odpowiadać na pytania niezwiązane z powyszym tematem. Propozycja wpisu powinna być oddzielona enterami. Wpisy: ${relevantPosts}`
           }
         ]
       },

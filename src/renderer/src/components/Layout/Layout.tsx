@@ -18,11 +18,7 @@ const Layout: React.FC = () => {
     testFunc()
   }, [testFunc])
 
-  useEffect(() => {
-    // const test = fetchOpenAIResponse(
-    // 'Potrzebuję napisać wpis promujący nasze nowe trzewiki wykonane ze skóry naturalnej. Mogę prosić o pomoc?'
-    // )
-  }, [posts])
+  console.log({ posts })
 
   return (
     <>
@@ -42,7 +38,7 @@ const Layout: React.FC = () => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="generator">
-            <GeneratorPage posts={posts} />
+            <GeneratorPage posts={posts.map((post) => post.content)} />
           </TabsContent>
           <TabsContent value="entries">Entries</TabsContent>
         </Tabs>
