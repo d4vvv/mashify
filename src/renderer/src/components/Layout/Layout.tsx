@@ -10,14 +10,14 @@ import { EntriesPage } from '../EntriesPage/EntriesPage'
 const Layout: React.FC = () => {
   const [posts, setPosts] = useState<IPost[]>([])
 
-  const testFunc = useCallback(async () => {
+  const fetchPosts = useCallback(async () => {
     const data = await window.supabaseAPI.fetchPosts()
     setPosts(data)
   }, [])
 
   useEffect(() => {
-    testFunc()
-  }, [testFunc])
+    fetchPosts()
+  }, [fetchPosts])
 
   return (
     <>
@@ -40,7 +40,7 @@ const Layout: React.FC = () => {
             <GeneratorPage posts={posts.map((post) => post.content)} />
           </TabsContent>
           <TabsContent value="entries">
-            <EntriesPage posts={posts} />
+            <EntriesPage posts={posts} fetchPosts={fetchPosts} />
           </TabsContent>
         </Tabs>
       </div>

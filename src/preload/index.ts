@@ -14,18 +14,16 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('api', api)
 
     contextBridge.exposeInMainWorld('supabaseAPI', {
-      fetchTexts: async () => {
-        const response = await fetch(
-          'https://utmimfwfldlhkagfncwx.supabase.co/functions/v1/manage-texts'
-        )
-        const data = await response.json()
-        return data
-      },
-
       fetchPosts: async () => {
-        const { data, error } = await supabase.from('posts').select('content')
+        const { data, error } = await supabase.from('posts').select('*')
         if (error) throw error
         return data
+      },
+      deletePost: async (id: string) => {
+        const { error } = await supabase.from('posts').delete().eq('id', id)
+        if (error) {
+          throw error
+        }
       }
     })
   } catch (error) {
