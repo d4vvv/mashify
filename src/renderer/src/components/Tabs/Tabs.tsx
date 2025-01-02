@@ -39,7 +39,7 @@ const TabsContent = React.forwardRef<
     ref={ref}
     tabIndex={-1}
     className={cn(
-      'mt-2 animate-fade-up ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 w-full h-[calc(100%-56px)]',
+      'mt-4 animate-fade-up ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 w-full h-[calc(100%-32px)]',
       className
     )}
     {...props}

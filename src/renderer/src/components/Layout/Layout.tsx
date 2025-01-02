@@ -22,7 +22,7 @@ const Layout: React.FC = () => {
   return (
     <>
       <div className={cn(styles.dragArea, 'w-full min-h-8')}></div>
-      <div className="flex h-full">
+      <div className="flex h-[calc(100%-32px)]">
         <Tabs className="flex gap-2 w-full" defaultValue="generator">
           <TabsList className="gap-2 justify-start min-w-[240px] p-4" tabIndex={-1}>
             <TabsTrigger value="generator" asChild>

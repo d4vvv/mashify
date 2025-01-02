@@ -1,18 +1,17 @@
+import { IMessage } from '@/types/message'
+import { useConversationStore } from '@renderer/store/useConversationStore'
 import { useState } from 'react'
 
-interface IMessage {
-  text?: string
-  isUser: boolean
-  isLoading: boolean
-  type?: string
-}
-
 export const useConversation = () => {
-  const [conversation, setConversation] = useState<IMessage[]>([
-    { text: 'Cześć! Jak mogę ci pomóc?', isUser: false, isLoading: false }
-  ])
+  const {
+    conversation: initialConversation,
+    addUserMessage: addUserMessageToStore,
+    addAssistantMessage: addAssistantMessageToStore
+  } = useConversationStore()
+  const [conversation, setConversation] = useState<IMessage[]>(initialConversation)
 
   const addUserMessage = (text: string) => {
+    addUserMessageToStore(text)
     setConversation((prev) => [...prev, { text, isUser: true, isLoading: false }])
   }
 
@@ -21,6 +20,7 @@ export const useConversation = () => {
   }
 
   const updateAssistantMessage = ({ type, content }: { type: string; content: string }) => {
+    addAssistantMessageToStore(content, type)
     setConversation((prev) => {
       const lastMessage = prev[prev.length - 1]
       return [
