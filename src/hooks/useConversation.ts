@@ -4,6 +4,7 @@ interface IMessage {
   text?: string
   isUser: boolean
   isLoading: boolean
+  type?: string
 }
 
 export const useConversation = () => {
@@ -19,10 +20,13 @@ export const useConversation = () => {
     setConversation((prev) => [...prev, { isUser: false, isLoading: true }])
   }
 
-  const updateAssistantMessage = (text: string) => {
+  const updateAssistantMessage = ({ type, content }: { type: string; content: string }) => {
     setConversation((prev) => {
       const lastMessage = prev[prev.length - 1]
-      return [...prev.slice(0, prev.length - 1), { ...lastMessage, text, isLoading: false }]
+      return [
+        ...prev.slice(0, prev.length - 1),
+        { ...lastMessage, text: content, isLoading: false, type }
+      ]
     })
   }
 

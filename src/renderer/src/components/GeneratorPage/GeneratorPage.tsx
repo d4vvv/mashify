@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react'
+import { useConversation } from '@/hooks/useConversation'
+import { useCallback } from 'react'
 import { GeneratorBubble } from '../Bubbles/GeneratorBubble'
 import { UserBubble } from '../Bubbles/UserBubble'
 import { GeneratorInput } from '../GeneratorInput/GeneratorInput'
-import { useConversation } from '@/hooks/useConversation'
 
 interface GeneratorPageProps {
   posts: string[]
@@ -18,18 +18,21 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ posts }) => {
     fetchOpenAIResponse(message)
   }
 
-  const fetchOpenAIResponse = useCallback(async (prompt) => {
-    try {
-      const response = await window.electron.ipcRenderer.invoke('assistantQuestion', {
-        relevantPosts: posts.join('|'),
-        prompt
-      })
+  const fetchOpenAIResponse = useCallback(
+    async (prompt) => {
+      try {
+        const response = await window.electron.ipcRenderer.invoke('assistantQuestion', {
+          relevantPosts: posts.join('|'),
+          prompt
+        })
 
-      updateAssistantMessage(response)
-    } catch (error) {
-      console.error('Error fetching OpenAI response:', error)
-    }
-  }, [])
+        updateAssistantMessage(response)
+      } catch (error) {
+        console.error('Error fetching OpenAI response:', error)
+      }
+    },
+    [posts]
+  )
 
   const renderConversation = () =>
     conversation.map((message, index) => {
@@ -38,7 +41,12 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ posts }) => {
           {message.isUser ? (
             <UserBubble key={index} text={message.text as string} />
           ) : (
-            <GeneratorBubble key={index} text={message.text} isLoading={message.isLoading} />
+            <GeneratorBubble
+              key={index}
+              text={message.text}
+              isLoading={message.isLoading}
+              type={message.type}
+            />
           )}
         </>
       )
