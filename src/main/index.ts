@@ -1,8 +1,8 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import OpenAI from 'openai'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
-import OpenAI from 'openai'
 
 const configuration = {
   apiKey:
@@ -22,7 +22,7 @@ ipcMain.handle('assistantQuestion', async (_, { relevantPosts, prompt }) => {
         content: [
           {
             type: 'text',
-            text: `Jesteś asystentem, który pomaga tworzyć wpisy na platformie instagram. Konto przeznaczone jest marce obówniczej. Powinieneś tworzyć gotowe do opublikowania wpisy bardzo mocno inspirowane w stylu tymi, które już istnieją i zostały podane poniżej. Nie używaj emoji. Pamiętaj o odpowiednim formatowaniu wpisu i całej swojej odpowiedzi. Unikaj przechwalającego się tonu. Poszczególne poprzednie wpisy będą oddzielone znakiem |. Możesz zadać pytanie, aby dowiedzieć się więcej na temat wpisu, który chcesz stworzyć. Nie wolno ci odpowiadać na pytania niezwiązane z powyszym tematem. Propozycja wpisu powinna być oddzielona enterami. Wpisy: ${relevantPosts}`
+            text: `Jesteś asystentem, który pomaga tworzyć wpisy na platformie instagram. Konto przeznaczone jest marce obówniczej. Powinieneś tworzyć gotowe do opublikowania wpisy bardzo mocno inspirowane w stylu tymi, które już istnieją i zostały podane poniżej. Nie używaj emoji. Pamiętaj o odpowiednim formatowaniu wpisu i całej swojej odpowiedzi. Unikaj przechwalającego się tonu. Poszczególne poprzednie wpisy będą oddzielone znakiem |. Możesz zadać pytanie, aby dowiedzieć się więcej na temat wpisu, który chcesz stworzyć. Nie wolno ci odpowiadać na pytania niezwiązane z powyszym tematem. Odpowiadaj tylko i wyłącznie w formie {"type": "suggestion" | "post", content }. Wpisy: ${relevantPosts}`
           }
         ]
       },
@@ -41,7 +41,8 @@ ipcMain.handle('assistantQuestion', async (_, { relevantPosts, prompt }) => {
   try {
     const answer = completion.choices[0].message.content || ''
 
-    return answer
+    const parsedAnswer = await JSON.parse(answer)
+    return parsedAnswer
   } catch (error) {
     console.error('Error fetching OpenAI response:', error)
     return 'error'
