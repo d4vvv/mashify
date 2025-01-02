@@ -4,9 +4,13 @@ import { useState } from 'react'
 
 interface GeneratorInputProps {
   addUserMessage: (text: string) => void
+  isResponseLoading?: boolean
 }
 
-export const GeneratorInput: React.FC<GeneratorInputProps> = ({ addUserMessage }) => {
+export const GeneratorInput: React.FC<GeneratorInputProps> = ({
+  addUserMessage,
+  isResponseLoading
+}) => {
   const [currentValue, setCurrentValue] = useState<string>('')
 
   const handleButtonClick = () => {
@@ -36,7 +40,7 @@ export const GeneratorInput: React.FC<GeneratorInputProps> = ({ addUserMessage }
       <Button
         variant="default"
         className="w-12 h-12 rounded-full"
-        disabled={!currentValue}
+        disabled={!currentValue || isResponseLoading}
         onClick={handleButtonClick}
       >
         <ArrowRight />
