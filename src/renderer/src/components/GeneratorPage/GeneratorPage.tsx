@@ -11,8 +11,13 @@ interface GeneratorPageProps {
 export const GeneratorPage: React.FC<GeneratorPageProps> = ({ posts }) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  const { conversation, addUserMessage, addAssistantMessage, updateAssistantMessage } =
-    useConversation()
+  const {
+    conversation,
+    isResponseLoading,
+    addUserMessage,
+    addAssistantMessage,
+    updateAssistantMessage
+  } = useConversation()
 
   const handleNewMessage = (message: string) => {
     addUserMessage(message)
@@ -59,11 +64,11 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ posts }) => {
   }, [conversation])
 
   return (
-    <div className="flex-col flex h-full gap-4 w-full pr-4">
+    <div className="flex-col flex h-full gap-6 w-full pr-4">
       <div ref={ref} className="flex-1 flex flex-col w-full overflow-y-auto no-scrollbar gap-4">
         {renderConversation()}
       </div>
-      <GeneratorInput addUserMessage={handleNewMessage} />
+      <GeneratorInput addUserMessage={handleNewMessage} isResponseLoading={isResponseLoading} />
     </div>
   )
 }

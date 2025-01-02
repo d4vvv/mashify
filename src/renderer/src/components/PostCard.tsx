@@ -29,9 +29,9 @@ export const PostCard: React.FC<PostCardProps> = ({ post, fetchPosts }) => {
           </CardContent>
         </Card>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="select-text">
         <p className="text-sm">{format(post.created_at, 'dd LLLL y', { locale: pl })}</p>
-        <p className="text-sm">{post.content}</p>
+        <p className="text-sm">{text}</p>
         <p className="text-sm mt-2 text-orange-100">{`#${tags}`}</p>
         <DialogClose asChild>
           <Button className="mt-4" onClick={deletePost}>

@@ -9,6 +9,7 @@ export const useConversation = () => {
     addAssistantMessage: addAssistantMessageToStore
   } = useConversationStore()
   const [conversation, setConversation] = useState<IMessage[]>(initialConversation)
+  const [isResponseLoading, setIsResponseLoading] = useState(false)
 
   const addUserMessage = (text: string) => {
     addUserMessageToStore(text)
@@ -17,6 +18,7 @@ export const useConversation = () => {
 
   const addAssistantMessage = () => {
     setConversation((prev) => [...prev, { isUser: false, isLoading: true }])
+    setIsResponseLoading(true)
   }
 
   const updateAssistantMessage = ({ type, content }: { type: string; content: string }) => {
@@ -28,7 +30,14 @@ export const useConversation = () => {
         { ...lastMessage, text: content, isLoading: false, type }
       ]
     })
+    setIsResponseLoading(false)
   }
 
-  return { conversation, addUserMessage, addAssistantMessage, updateAssistantMessage }
+  return {
+    conversation,
+    isResponseLoading,
+    addUserMessage,
+    addAssistantMessage,
+    updateAssistantMessage
+  }
 }
