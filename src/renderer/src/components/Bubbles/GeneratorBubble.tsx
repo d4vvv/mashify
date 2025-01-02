@@ -12,7 +12,12 @@ export const GeneratorBubble: React.FC<GeneratorBubbleProps> = ({ text, isLoadin
       return <BubbleLoader />
     }
 
-    return text
+    return (
+      <>
+        <p>{text}</p>
+        <p>ADJUST</p>
+      </>
+    )
   }
 
   return (

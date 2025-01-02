@@ -5,6 +5,7 @@ import { GeneratorPage } from '../GeneratorPage/GeneratorPage'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Tabs/Tabs'
 import styles from './Layout.module.css'
 import { IPost } from '@/types/post'
+import { EntriesPage } from '../EntriesPage/EntriesPage'
 
 const Layout: React.FC = () => {
   const [posts, setPosts] = useState<IPost[]>([])
@@ -17,8 +18,6 @@ const Layout: React.FC = () => {
   useEffect(() => {
     testFunc()
   }, [testFunc])
-
-  console.log({ posts })
 
   return (
     <>
@@ -40,7 +39,9 @@ const Layout: React.FC = () => {
           <TabsContent value="generator">
             <GeneratorPage posts={posts.map((post) => post.content)} />
           </TabsContent>
-          <TabsContent value="entries">Entries</TabsContent>
+          <TabsContent value="entries">
+            <EntriesPage posts={posts} />
+          </TabsContent>
         </Tabs>
       </div>
     </>
