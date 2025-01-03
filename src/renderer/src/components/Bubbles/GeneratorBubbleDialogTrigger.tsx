@@ -9,6 +9,7 @@ import {
   DialogTrigger
 } from '../Dialog/Dialog'
 import { useState } from 'react'
+import { useToast } from '@/hooks/useToast'
 
 interface GeneratorBubbleDialogTriggerProps {
   text: string
@@ -19,9 +20,11 @@ export const GeneratorBubbleDialogTrigger: React.FC<GeneratorBubbleDialogTrigger
 }) => {
   const [textAreaContent, setTextAreaContent] = useState(text.replace(/\u2028/g, '\n'))
   const { fetchPosts } = usePostsStore()
+  const { toast } = useToast()
 
   const savePost = async () => {
     await window.supabaseAPI.savePost(textAreaContent)
+    toast({ description: 'Post został zapisany' })
     fetchPosts()
   }
 
