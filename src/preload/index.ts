@@ -24,6 +24,11 @@ if (process.contextIsolated) {
         if (error) {
           throw error
         }
+      },
+      savePost: async (contentValue: string) => {
+        const { data, error } = await supabase.from('posts').insert({ content: contentValue })
+        if (error) throw error
+        return data
       }
     })
   } catch (error) {
