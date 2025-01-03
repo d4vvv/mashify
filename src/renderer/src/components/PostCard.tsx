@@ -6,6 +6,7 @@ import { pl } from 'date-fns/locale'
 import { Button } from './Button/Button'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { usePostsStore } from '@renderer/store/usePostsStore'
+import { useToast } from '@/hooks/useToast'
 
 interface PostCardProps {
   post: IPost
@@ -13,10 +14,12 @@ interface PostCardProps {
 
 export const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const { fetchPosts } = usePostsStore()
+  const { toast } = useToast()
   const [text, tags] = post.content.split(/#(.*)/s)
 
   const deletePost = async () => {
     await window.supabaseAPI.deletePost(post.id)
+    toast({ description: 'Post został usunięty' })
     fetchPosts()
   }
 
