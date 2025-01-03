@@ -7,6 +7,7 @@ declare global {
     supabaseAPI: {
       fetchPosts: () => Promise<IPost[]>
       deletePost: (id: number) => void
+      savePost: (post: IPost) => unknown
     }
   }
 }

@@ -1,23 +1,18 @@
 import { cn } from '@/utils/cn'
-import { useCallback, useEffect, useState } from 'react'
+import { usePostsStore } from '@renderer/store/usePostsStore'
+import { useEffect } from 'react'
 import { Button } from '../Button/Button'
+import { EntriesPage } from '../EntriesPage/EntriesPage'
 import { GeneratorPage } from '../GeneratorPage/GeneratorPage'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Tabs/Tabs'
-import styles from './Layout.module.css'
-import { IPost } from '@/types/post'
-import { EntriesPage } from '../EntriesPage/EntriesPage'
+import styles from './App.module.css'
 
-const Layout: React.FC = () => {
-  const [posts, setPosts] = useState<IPost[]>([])
-
-  const fetchPosts = useCallback(async () => {
-    const data = await window.supabaseAPI.fetchPosts()
-    setPosts(data)
-  }, [])
+const App: React.FC = () => {
+  const { posts, fetchPosts } = usePostsStore()
 
   useEffect(() => {
     fetchPosts()
-  }, [fetchPosts])
+  }, [])
 
   return (
     <>
@@ -40,7 +35,7 @@ const Layout: React.FC = () => {
             <GeneratorPage posts={posts.map((post) => post.content)} />
           </TabsContent>
           <TabsContent value="entries">
-            <EntriesPage posts={posts} fetchPosts={fetchPosts} />
+            <EntriesPage posts={posts} />
           </TabsContent>
         </Tabs>
       </div>
@@ -48,6 +43,6 @@ const Layout: React.FC = () => {
   )
 }
 
-Layout.displayName = 'Layout'
+App.displayName = 'App'
 
-export default Layout
+export default App
