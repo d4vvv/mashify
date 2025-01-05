@@ -2,6 +2,8 @@ import { IMessage } from '@/types/message'
 import { useConversationStore } from '@renderer/store/useConversationStore'
 import { useCallback, useState } from 'react'
 
+const MAX_OPENAI_API_CONVERSATION_LENGTH = 10
+
 export const useConversation = ({ posts }) => {
   const {
     conversation: initialConversation,
@@ -26,7 +28,8 @@ export const useConversation = ({ posts }) => {
       try {
         const response = await window.electron.ipcRenderer.invoke('assistantQuestion', {
           relevantPosts: posts.join('|'),
-          prompt
+          prompt,
+          conversation: conversation.slice(-MAX_OPENAI_API_CONVERSATION_LENGTH)
         })
 
         updateAssistantMessage(response)
@@ -34,7 +37,7 @@ export const useConversation = ({ posts }) => {
         console.error('Error fetching OpenAI response:', error)
       }
     },
-    [posts]
+    [posts, conversation]
   )
 
   const updateAssistantMessage = ({ type, content }: { type: string; content: string }) => {
