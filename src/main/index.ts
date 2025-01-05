@@ -12,18 +12,50 @@ const configuration = {
 
 const openai = new OpenAI(configuration)
 
-ipcMain.handle('assistantQuestion', async (_, { relevantPosts, prompt }) => {
+ipcMain.handle('assistantQuestion', async (_, { relevantPosts, prompt, conversation }) => {
+  console.log({ conversation })
+
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [
       {
         role: 'system',
-        content: [
-          {
-            type: 'text',
-            text: `Jesteś asystentem, który pomaga tworzyć wpisy na platformie instagram. Konto przeznaczone jest marce obówniczej. Powinieneś tworzyć gotowe do opublikowania wpisy w języku polskim bardzo mocno inspirowane w stylu tymi, które już istnieją i zostały podane poniżej. Nie używaj emoji. Nie wolno zapomnieć ci o odpowiednim formatowaniu wpisu i całej swojej odpowiedzi. Pamiętaj o odpowiednim dzieleniu tekstu na paragrafy. Jako znaku nowej linii używaj jedynie u2028. Unikaj przechwalającego się tonu. Poszczególne poprzednie wpisy będą oddzielone znakiem |. Możesz zadać pytanie, aby dowiedzieć się więcej na temat wpisu, który chcesz stworzyć. Przed tagami na końcu zawsze stosuj dokładnie dwa znaki nowej linii. Nie wolno ci odpowiadać na pytania niezwiązane z powyszym tematem. Odpowiadaj tylko i wyłącznie w formie {"type": "suggestion" | "post", content }. Wpisy: ${relevantPosts}`
-          }
-        ]
+        content: `
+            Jesteś asystentem, który pomaga tworzyć wpisy na platformę Instagram. 
+            Konto należy do marki obuwia i Twoim zadaniem jest przygotowywanie gotowych do publikacji wpisów w języku polskim. 
+            Wpisy powinny być bardzo mocno inspirowane stylem istniejących przykładów, które są podane poniżej (oddzielone znakiem |). 
+            Nie używaj emoji.
+            
+            Zasady formatowania: 
+            - Odpowiednio dziel tekst na paragrafy. 
+            - Używaj znaku nowej linii jedynie jako \\u2028. 
+            - Przed sekcją z hasztagami zawsze wstaw dokładnie dwa znaki nowej linii.
+            
+            Tone i styl: 
+            - Unikaj przechwalającego się tonu. 
+            - W razie potrzeby możesz zadawać pytania, aby lepiej dopasować treść wpisu do potrzeb.
+            
+            Odpowiedzi: 
+            - Odpowiadaj **tylko** w formacie JSON:
+              - {"type": "suggestion", "content": "Twoja sugestia..."} 
+              - {"type": "post", "content": "Gotowy wpis..."} 
+            - Upewnij się, że każda odpowiedź jest poprawnym JSON-em, bez dodatkowych znaków, białych spacji ani nowej linii.
+            - Nie odpowiadaj na pytania niezwiązane z powyższym tematem.
+            
+            Wpisy: ${relevantPosts}
+            `
+      },
+      ...conversation.map((message) => ({
+        role: message.isUser ? 'user' : 'assistant',
+        content: message.text
+      })),
+      {
+        role: 'system',
+        content: `
+        Przypomnienie: Odpowiadaj zawsze w formacie JSON:
+        {"type": "suggestion", "content": "Twoja sugestia..."}
+        {"type": "post", "content": "Gotowy wpis..."}
+        `
       },
       {
         role: 'user',
@@ -40,7 +72,7 @@ ipcMain.handle('assistantQuestion', async (_, { relevantPosts, prompt }) => {
   try {
     const answer = completion.choices[0].message.content || ''
 
-    const parsedAnswer = await JSON.parse(answer)
+    const parsedAnswer = await JSON.parse(answer.trim())
     return parsedAnswer
   } catch (error) {
     console.error('Error fetching OpenAI response:', error)
