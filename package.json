@@ -1,6 +1,6 @@
 {
   "name": "mium-helper",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "d4vvv.com",
@@ -75,6 +75,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "electron-log": "^5.4.1",
     "electron-updater": "^6.6.2",
     "lucide-react": "^0.469.0",
     "openai": "^4.77.0",
