@@ -58,6 +58,8 @@ export const useConversation = ({ posts }) => {
     fetchOpenAIResponse(message)
   }
 
+  console.log({ conversation })
+
   return {
     conversation,
     isResponseLoading,

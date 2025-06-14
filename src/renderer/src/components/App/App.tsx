@@ -6,9 +6,13 @@ import { EntriesPage } from '../EntriesPage/EntriesPage'
 import { GeneratorPage } from '../GeneratorPage/GeneratorPage'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../Tabs/Tabs'
 import styles from './App.module.css'
+import { useConversationStore } from '@renderer/store/useConversationStore'
 
 const App: React.FC = () => {
   const { posts, fetchPosts } = usePostsStore()
+  const { clearConversation } = useConversationStore()
+
+  console.log({ posts })
 
   useEffect(() => {
     fetchPosts()
@@ -30,6 +34,14 @@ const App: React.FC = () => {
                 Wpisy
               </Button>
             </TabsTrigger>
+            <div className="flex-1" />
+            <Button
+              variant="menu"
+              className="self-start justify-self-end text-sm px-3"
+              onClick={clearConversation}
+            >
+              Resetuj czat
+            </Button>
           </TabsList>
           <TabsContent value="generator">
             <GeneratorPage posts={posts.map((post) => post.content)} />
