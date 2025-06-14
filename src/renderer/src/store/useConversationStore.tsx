@@ -11,6 +11,7 @@ interface StoreState {
   conversation: IMessage[]
   addUserMessage: (text: string) => void
   addAssistantMessage: (text: string, type: string) => void
+  clearConversation: () => void
 }
 
 export const useConversationStore = create<StoreState>()((set) => ({

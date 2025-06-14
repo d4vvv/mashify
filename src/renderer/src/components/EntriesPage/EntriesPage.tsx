@@ -1,5 +1,6 @@
 import { IPost } from '@/types/post'
 import { PostCard } from '../PostCard'
+import { AddPostDialog } from './AddPostDialog/AddPostDialog'
 
 interface EntriesPageProps {
   posts: IPost[]
@@ -11,6 +12,7 @@ export const EntriesPage: React.FC<EntriesPageProps> = ({ posts }) => {
       {posts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}
+      <AddPostDialog text="" />
     </div>
   )
 }
