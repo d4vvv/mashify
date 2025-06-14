@@ -10,8 +10,8 @@ autoUpdater.autoDownload = false
 autoUpdater.autoInstallOnAppQuit = true
 
 const configuration = {
-  apiKey:
-    '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',
+  // @ts-ignore (define in dts)
+  apiKey: import.meta.env.VITE_OPENAI_KEY,
   organization: 'org-f7Q7ypJpglT8flHx55RJA605'
 }
 
