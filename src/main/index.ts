@@ -3,6 +3,10 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import OpenAI from 'openai'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
+import { autoUpdater, AppUpdater } from 'electron-updater'
+
+autoUpdater.autoDownload = false
+autoUpdater.autoInstallOnAppQuit = true
 
 const configuration = {
   apiKey:
@@ -13,8 +17,6 @@ const configuration = {
 const openai = new OpenAI(configuration)
 
 ipcMain.handle('assistantQuestion', async (_, { relevantPosts, prompt, conversation }) => {
-  console.log({ conversation })
-
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [
@@ -142,6 +144,13 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  autoUpdater.checkForUpdates()
+})
+
+autoUpdater.on('update-available', (info) => {
+  console.log('Update available:', info)
+  autoUpdater.downloadUpdate()
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
