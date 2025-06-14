@@ -5,6 +5,7 @@ import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 import { autoUpdater, AppUpdater } from 'electron-updater'
 import log from 'electron-log'
+import { dialog } from 'electron'
 
 autoUpdater.autoDownload = false
 autoUpdater.autoInstallOnAppQuit = true
@@ -158,6 +159,19 @@ autoUpdater.on('update-available', (info) => {
   log.info('Update available:', info)
   console.log('Update available:', info)
   autoUpdater.downloadUpdate()
+})
+
+autoUpdater.on('update-downloaded', () => {
+  const result = dialog.showMessageBoxSync({
+    type: 'question',
+    buttons: ['Restart now', 'Later'],
+    defaultId: 0,
+    message: 'A new update is ready. Restart the app to install it?'
+  })
+
+  if (result === 0) {
+    autoUpdater.quitAndInstall()
+  }
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
