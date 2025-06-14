@@ -24,7 +24,7 @@ export const GeneratorBubbleDialogTrigger: React.FC<GeneratorBubbleDialogTrigger
 
   const savePost = async () => {
     await window.supabaseAPI.savePost(textAreaContent)
-    toast({ description: 'Post został zapisany' })
+    toast({ description: 'Wpis został zapisany' })
     fetchPosts()
   }
 
