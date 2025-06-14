@@ -158,10 +158,22 @@ app.whenReady().then(() => {
 autoUpdater.on('update-available', (info) => {
   log.info('Update available:', info)
   console.log('Update available:', info)
-  autoUpdater.downloadUpdate()
+  autoUpdater
+    .downloadUpdate()
+    .then(() => {
+      log.info('Update downloaded, prompting user to restart')
+      console.log('Update downloaded, prompting user to restart')
+    })
+    .catch((error) => {
+      log.error('Error downloading update:', error)
+      console.error('Error downloading update:', error)
+    })
 })
 
 autoUpdater.on('update-downloaded', () => {
+  log.info('Update downloaded, prompting user to restart')
+  console.log('Update downloaded, prompting user to restart')
+  // Show a dialog to the user asking if they want to restart now or later
   const result = dialog.showMessageBoxSync({
     type: 'question',
     buttons: ['Restart now', 'Later'],
