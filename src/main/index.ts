@@ -181,6 +181,8 @@ autoUpdater.on('update-downloaded', () => {
     message: 'A new update is ready. Restart the app to install it?'
   })
 
+  console.log({ result })
+
   if (result === 0) {
     autoUpdater.quitAndInstall()
   }
