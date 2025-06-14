@@ -4,6 +4,7 @@ import OpenAI from 'openai'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
 import { autoUpdater, AppUpdater } from 'electron-updater'
+import log from 'electron-log'
 
 autoUpdater.autoDownload = false
 autoUpdater.autoInstallOnAppQuit = true
@@ -125,6 +126,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   console.log('ready')
+  log.info('ready')
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -146,10 +148,14 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  autoUpdater.checkForUpdatesAndNotify()
+  autoUpdater.checkForUpdatesAndNotify().catch((error) => {
+    log.error('Error checking for updates:', error)
+    console.error('Error checking for updates:', error)
+  })
 })
 
 autoUpdater.on('update-available', (info) => {
+  log.info('Update available:', info)
   console.log('Update available:', info)
   autoUpdater.downloadUpdate()
 })
