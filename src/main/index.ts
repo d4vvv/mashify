@@ -126,8 +126,6 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  console.log('ready')
-  log.info('ready')
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -149,39 +147,20 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  autoUpdater.checkForUpdatesAndNotify().catch((error) => {
-    log.error('Error checking for updates:', error)
-    console.error('Error checking for updates:', error)
-  })
+  autoUpdater.checkForUpdatesAndNotify()
 })
 
 autoUpdater.on('update-available', (info) => {
-  log.info('Update available:', info)
-  console.log('Update available:', info)
-  autoUpdater
-    .downloadUpdate()
-    .then(() => {
-      log.info('Update downloaded, prompting user to restart')
-      console.log('Update downloaded, prompting user to restart')
-    })
-    .catch((error) => {
-      log.error('Error downloading update:', error)
-      console.error('Error downloading update:', error)
-    })
+  autoUpdater.downloadUpdate()
 })
 
 autoUpdater.on('update-downloaded', () => {
-  log.info('Update downloaded, prompting user to restart')
-  console.log('Update downloaded, prompting user to restart')
-  // Show a dialog to the user asking if they want to restart now or later
   const result = dialog.showMessageBoxSync({
     type: 'question',
     buttons: ['Restart now', 'Later'],
     defaultId: 0,
     message: 'A new update is ready. Restart the app to install it?'
   })
-
-  console.log({ result })
 
   if (result === 0) {
     autoUpdater.quitAndInstall()
