@@ -12,8 +12,6 @@ const App: React.FC = () => {
   const { posts, fetchPosts } = usePostsStore()
   const { clearConversation } = useConversationStore()
 
-  console.log({ posts })
-
   useEffect(() => {
     fetchPosts()
   }, [])

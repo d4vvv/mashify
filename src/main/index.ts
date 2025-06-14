@@ -124,6 +124,7 @@ function createWindow(): void {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  console.log('ready')
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -145,7 +146,7 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-  autoUpdater.checkForUpdates()
+  autoUpdater.checkForUpdatesAndNotify()
 })
 
 autoUpdater.on('update-available', (info) => {
