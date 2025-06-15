@@ -1,9 +1,9 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell, autoUpdater as eAutoUpdater } from 'electron'
 import OpenAI from 'openai'
 import { join } from 'path'
 import icon from '../../resources/icon.png?asset'
-import { autoUpdater, AppUpdater } from 'electron-updater'
+import { autoUpdater } from 'electron-updater'
 import log from 'electron-log'
 import { dialog } from 'electron'
 
@@ -176,7 +176,7 @@ autoUpdater.on('update-downloaded', () => {
   if (result === 0) {
     try {
       log.info('Installing update...')
-      autoUpdater.quitAndInstall()
+      eAutoUpdater.quitAndInstall()
     } catch (error) {
       log.error('Error during update installation:', error)
       dialog.showErrorBox(
