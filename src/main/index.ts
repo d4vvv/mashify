@@ -151,7 +151,18 @@ app.whenReady().then(() => {
 })
 
 autoUpdater.on('update-available', (info) => {
-  autoUpdater.downloadUpdate()
+  autoUpdater
+    .downloadUpdate()
+    .then(() => {
+      console.log('Update downloaded:', info)
+    })
+    .catch((error) => {
+      log.error('Error downloading update:', error)
+      dialog.showErrorBox(
+        'Update Error',
+        'An error occurred while downloading the update. Please try again later.'
+      )
+    })
 })
 
 autoUpdater.on('update-downloaded', () => {
@@ -163,7 +174,16 @@ autoUpdater.on('update-downloaded', () => {
   })
 
   if (result === 0) {
-    autoUpdater.quitAndInstall()
+    try {
+      log.info('Installing update...')
+      autoUpdater.quitAndInstall()
+    } catch (error) {
+      log.error('Error during update installation:', error)
+      dialog.showErrorBox(
+        'Update Installation Error',
+        'An error occurred while installing the update. Please try again later.'
+      )
+    }
   }
 })
 
